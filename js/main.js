@@ -3,12 +3,12 @@ var api_url = "http://localhost:5000/api/users";
 //создание строки таблицы
 function row(user) {
   const tr = document.createElement("tr"); //новая строка дл пользователя
-  tr.style.verticalAlign = "middle";//вертикальное выравнивание строки таблицы
-  tr.setAttribute("data-rowid", user.id); //атрибут, из которого можно извлечь id пользователя
+  tr.style.verticalAlign = "middle"; //вертикальное выравнивание строки таблицы
+  tr.setAttribute("data-rowid", user._id); //атрибут, из которого можно извлечь id пользователя
 
   //ячейка id
   const idTd = document.createElement("td");
-  idTd.append(user.id); //контент ячейки
+  idTd.append(user._id); //контент ячейки
   tr.append(idTd); //добалвяем ячейку в строку
 
   //ячейка изображения
@@ -34,23 +34,23 @@ function row(user) {
   const btnTd = document.createElement("td");
 
   const editBtn = document.createElement("button");
-  editBtn.setAttribute("data-id", user.id);
+  editBtn.setAttribute("data-id", user._id);
   editBtn.classList.add("btn", "btn-warning", "me-5");
   editBtn.append("Изменить"); //контент кнопки
   //слушатель клика для получения пользователя по id
   editBtn.addEventListener("click", (e) => {
     e.preventDefault();
-    GetUser(user.id);
+    GetUser(user._id);
   });
   btnTd.append(editBtn);
 
   const removeBtn = document.createElement("button");
-  removeBtn.setAttribute("data-id", user.id);
+  removeBtn.setAttribute("data-id", user._id);
   removeBtn.classList.add("btn", "btn-danger", "ms-5");
   removeBtn.append("Удалить");
   removeBtn.addEventListener("click", (e) => {
     e.preventDefault();
-    DeleteUser(user.id);
+    DeleteUser(user._id);
   });
   btnTd.append(removeBtn);
 
@@ -82,7 +82,7 @@ async function GetUser(id) {
   if (response.ok === true) {
     const user = await response.json();
     const form = document.forms["userForm"];
-    form.elements["id"].value = user.id;
+    form.elements["id"].value = user._id;
     form.elements["name"].value = user.name;
     form.elements["age"].value = user.age;
   }
@@ -109,8 +109,8 @@ async function CreateUser(userName, userAge, userImage) {
 
 //сброс формы
 function reset() {
-  const form = document.forms["userForm"];
-  form.reset();
+  const form = document.forms["userForm"].reset();
+  // form.reset();
   form.elements["id"].value = 0;
 }
 //обработчик для кнопки сброса формы
@@ -153,7 +153,7 @@ async function EditUser(userId, userName, userAge, userImage) {
     const user = await response.json();
     //находим строку по id пользователя, заменяем на строку с новыми данными
     document
-      .querySelector(`tr[data-rowid="${user.id}"]`)
+      .querySelector(`tr[data-rowid="${user._id}"]`)
       .replaceWith(row(user));
     reset();
   }
@@ -169,7 +169,7 @@ async function DeleteUser(id) {
   if (response.ok === true) {
     const user = await response.json();
     //удаляем строку по id пользователя
-    document.querySelector(`tr[data-rowid="${user.id}"]`).remove();
+    document.querySelector(`tr[data-rowid="${user._id}"]`).remove();
   }
 }
 
