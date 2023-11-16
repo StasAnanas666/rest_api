@@ -103,20 +103,20 @@ async function CreateUser(userName, userAge, userImage) {
   if (response.ok === true) {
     const user = await response.json();
     document.querySelector("tbody").append(row(user));
-    reset();
+    resetForm();
   }
 }
 
 //сброс формы
-function reset() {
-  const form = document.forms["userForm"].reset();
-  // form.reset();
+function resetForm() {
+  const form = document.forms["userForm"];
+  form.reset();
   form.elements["id"].value = 0;
 }
 //обработчик для кнопки сброса формы
-document.querySelector("#reset").addEventListener("click", (e) => {
+document.querySelector("#resetBtn").addEventListener("click", (e) => {
   e.preventDefault();
-  reset();
+  resetForm();
 });
 //обработчик отправки данных формы на сервер
 document.forms["userForm"].addEventListener("submit", (e) => {
@@ -155,7 +155,7 @@ async function EditUser(userId, userName, userAge, userImage) {
     document
       .querySelector(`tr[data-rowid="${user._id}"]`)
       .replaceWith(row(user));
-    reset();
+    resetForm();
   }
 }
 

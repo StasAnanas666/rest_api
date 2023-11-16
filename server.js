@@ -85,10 +85,11 @@ app.put("/api/users", async (request, response) => {
   const userImage = request.body.image;
 
   try {
-    const id = new objectId(request.params.id);
-    const user = await collection.updateOne(
+    const id = new objectId(request.body.id);
+    const user = await collection.findOneAndUpdate(
       { _id: id },
-      { $set: { name: userName, age: userAge, image: userImage } }
+      { $set: { name: userName, age: userAge, image: userImage } },
+      { returnDocument: "after" }
     );
 
     if (user) response.send(user);
@@ -104,7 +105,7 @@ app.delete("/api/users/:id", async (request, response) => {
   const collection = request.app.locals.collection;
   try {
     const id = new objectId(request.params.id);
-    const user = await collection.deleteOne({ _id: id });
+    const user = await collection.findOneAndDelete({ _id: id });
 
     if (user) response.send(user);
     else response.sendStatus(404);
